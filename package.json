@@ -1,0 +1,30 @@
+{
+    "name": "threess",
+    "version": "0.0.0",
+    "description": "Centralized styling for THREE objects",
+    "keywords": [],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://opensource.org/licenses/MIT"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Vannevartech/threess.git"
+    },
+    "bugs": "https://github.com/Vannevartech/threess/issues",
+    "maintainers": [
+        {
+            "name": "Jon Travis",
+            "email": "jon@p00p.org"
+        }
+    ],
+    "contributors": [],
+    "devDependencies": {
+        "karma-jasmine": "0.1.5"
+    },
+    "scripts": {
+        "test": "karma start --single-run"
+    }
+}

@@ -1,0 +1,42 @@
+<div class="style-editor">
+        <div class='flexbox'>
+            <div class="flex">
+                <select class="ui-widget" size="10" ng-model="rule" ng-options="r.selector for r in rules"></select>
+            </div>
+            <div class="flex">
+                <ul class="name-value-list">
+                    <li>
+                        <h3>Selector</h3>
+                        <div>{{ rule.selector }}</div>
+                    </li>
+                    <li>
+                        <h3>Specificity</h3>
+                        <div>{{ rule.specificity }}</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="flex">
+                <ul class="name-value-list">
+                    <li ng-repeat="(key, val) in rule.style track by key">
+                        <h3>{{ key }}</h3>
+                        <div editable="true"
+                             styleattr="{{key}}"
+                             contenteditable="true"
+                             ng-model="localVal"
+                             ng-change="updateStyle(key, localVal)">
+                            {{ val }}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="flex">
+                <div colorpicker="true"
+                     class="colorpicker"
+                     color="{{ pickerColor }}"
+                     on-color-change="onPickerChange(color)"
+                     visible="{{showPicker}}"></div>
+            </div>
+    </div>
+</div>
