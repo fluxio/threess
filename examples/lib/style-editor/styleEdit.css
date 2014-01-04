@@ -70,15 +70,9 @@
 
 .flexbox {
     display: -webkit-flex;
+    display: flex;
     -webkit-flex-direction: row;
+    flex-direction: row;
 }
 
-.flex  { -webkit-flex: 1; }
-.flex2 { -webkit-flex: 2; }
-.flex3 { -webkit-flex: 3; }
-.flex4 { -webkit-flex: 4; }
-.flex5 { -webkit-flex: 5; }
-.flex6 { -webkit-flex: 6; }
-.flex7 { -webkit-flex: 7; }
-.flex8 { -webkit-flex: 8; }
-.flex9 { -webkit-flex: 9; }
+.flex  { -webkit-flex: 1; flex: 1; }
