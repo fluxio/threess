@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html ng-app="app" lang="en">
+	<head>
+		<title>three.js webgl - mirror</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="lib/style-editor/reset.css">
+        <link rel="stylesheet" href="lib/style-editor/styleEdit.css">
+
+		<style>
+			body {
+				color: #888888;
+				font-family:Monospace;
+				font-size:13px;
+
+				background-color: #000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 0px;
+				width: 200px;
+				left: calc(50% - 100px);
+				text-align: center;
+			}
+
+			a {
+				color: #00f;
+			}
+		</style>
+	</head>
+	<body ng-controller="SetupCtrl">
+
+		<div id="container"></div>
+		<div id="info"><a href="http://threejs.org" target="_blank">three.js</a> - mirror
+		</div>
+
+        <style-edit-widget style-context="styleContext"></style-edit-widget>
+
+
+        <script src="lib/jquery-1.9.1.min.js"></script>
+        <script src="lib/three.js"></script>
+        <script src="lib/angular.min.js"></script>
+        <script src="lib/raphael-min.2.1.0.js"></script>
+        <script src="lib/style-editor/colorpicker.js"></script>
+        <script src="lib/style-editor/styleEdit.js"></script>
+
+        <script src="../lib/Slick.Finder.js"></script>
+        <script src="../lib/Slick.Parser.js"></script>
+        <script src="../threess.js"></script>
+
+		<script>
+
+			// scene size
+			var WIDTH = window.innerWidth;
+			var HEIGHT = window.innerHeight;
+
+			// camera
+			var VIEW_ANGLE = 45;
+			var ASPECT = WIDTH / HEIGHT;
+			var NEAR = 1;
+			var FAR = 500;
+
+			var camera, scane, renderer;
+
+			var cameraControls;
+
+			var verticalMirror, groundMirror;
+			var sphereGroup, smallSphere;
+
+			function init() {
+
+				// renderer
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( WIDTH, HEIGHT );
+
+				renderer.autoClear = true;
+				renderer.setClearColor( 0x000000, 1 );
+
+				// scene
+				scene = new THREE.Scene();
+
+				// camera
+				camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+				camera.position.set( 0, 75, 160 );
+
+				cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+				cameraControls.target.set( 0, 40, 0);
+				cameraControls.maxDistance = 400;
+				cameraControls.minDistance = 10;
+				cameraControls.update();
+
+				var container = document.getElementById( 'container' );
+				container.appendChild( renderer.domElement );
+
+			}
+
+			function fillScene(style) {
+				var planeGeo = new THREE.PlaneGeometry( 100.1, 100.1 );
+				
+			   //MIRORR planes
+				groundMirror = new THREE.Mirror( renderer, camera, { clipBias: 0.003, textureWidth: WIDTH, textureHeight: HEIGHT, color: 0x777777 } );
+				
+				var mirrorMesh = new THREE.Mesh( planeGeo, groundMirror.material );
+				mirrorMesh.add( groundMirror );
+				mirrorMesh.rotateX( - Math.PI / 2 );
+				scene.add( mirrorMesh );
+
+				verticalMirror = new THREE.Mirror( renderer, camera, { clipBias: 0.003, textureWidth: WIDTH, textureHeight: HEIGHT, color:0x889999 } );
+				
+				var verticalMirrorMesh = new THREE.Mesh( new THREE.PlaneGeometry( 60, 60 ), verticalMirror.material );
+				verticalMirrorMesh.add( verticalMirror );
+				verticalMirrorMesh.position.y = 35;
+				verticalMirrorMesh.position.z = -45;
+				scene.add( verticalMirrorMesh );
+
+				sphereGroup = new THREE.Object3D();
+				scene.add( sphereGroup );
+
+				var geometry = new THREE.CylinderGeometry( 0.1, 15 * Math.cos( Math.PI / 180 * 30 ), 0.1, 24, 1 );
+				var material = new THREE.MeshPhongMaterial( );
+				var sphereCap = new THREE.Mesh( geometry, material );
+				sphereCap.position.y = -15 * Math.sin( Math.PI / 180 * 30 ) - 0.05;
+				sphereCap.rotateX(-Math.PI);
+				
+				var geometry = new THREE.SphereGeometry( 15, 24, 24, Math.PI / 2, Math.PI * 2, 0, Math.PI / 180 * 120 );
+				var halfSphere = new THREE.Mesh( geometry, material );
+				halfSphere.add( sphereCap );
+				halfSphere.rotateX( - Math.PI / 180 * 135 ); 
+				halfSphere.rotateZ( - Math.PI / 180 * 20 ); 
+				halfSphere.position.y = 7.5 + 15 * Math.sin( Math.PI / 180 * 30 );
+
+                var largeSphereStyle = style.declareObject('largeSphere');
+                largeSphereStyle.applyMaterialOnChange(halfSphere);
+                largeSphereStyle.applyMaterialOnChange(sphereCap);
+
+
+				sphereGroup.add( halfSphere );
+				
+				var geometry = new THREE.IcosahedronGeometry( 5, 0 );
+				var material = new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0x333333, shading: THREE.FlatShading } );
+				smallSphere = new THREE.Mesh( geometry, material );
+				scene.add(smallSphere);
+                style.declareObject('smallSphere').applyMaterialOnChange(smallSphere);
+
+				// walls
+				var planeTop = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( ) );
+				planeTop.position.y = 100;
+				planeTop.rotateX( Math.PI / 2 );
+				scene.add( planeTop );
+                style.declareObject('wall', 'top').applyMaterialOnChange(planeTop);
+
+				
+				var planeBack = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial(  ) );
+				planeBack.position.z = -50;
+				planeBack.position.y = 50;
+				scene.add( planeBack );
+                style.declareObject('wall', 'back').applyMaterialOnChange(planeBack);
+				
+				var planeFront = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial(  ) );
+				planeFront.position.z = 50;
+				planeFront.position.y = 50;
+				planeFront.rotateY( Math.PI );
+				scene.add( planeFront );
+                style.declareObject('wall', 'front').applyMaterialOnChange(planeFront);
+				
+				var planeRight = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial(  ) );
+				planeRight.position.x = 50;
+				planeRight.position.y = 50;
+				planeRight.rotateY( - Math.PI / 2 );
+				scene.add( planeRight );
+                style.declareObject('wall', 'right').applyMaterialOnChange(planeRight);
+				
+				var planeLeft = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( ) );
+				planeLeft.position.x = -50;
+				planeLeft.position.y = 50;
+				planeLeft.rotateY( Math.PI / 2 );
+				scene.add( planeLeft );
+                style.declareObject('wall', 'left').applyMaterialOnChange(planeLeft);
+				
+				// lights
+				var mainLight = new THREE.PointLight( undefined, 1.5, 250 );
+				mainLight.position.y = 60;
+				scene.add( mainLight );
+
+                // For lights, we cheat and simply assign a color from the styled material
+                style.declareObject('light', 'main').addMaterialChangeListener(function(material) {
+                    mainLight.color = material.color;
+                });
+
+				var greenLight = new THREE.PointLight( 0x00ff00, 0.25, 1000 );
+				greenLight.position.set( 550, 50, 0 );
+				scene.add( greenLight );
+                style.declareObject('light', 'green').addMaterialChangeListener(function(material) {
+                    greenLight.color = material.color;
+                });
+
+
+				var redLight = new THREE.PointLight( 0xff0000, 0.25, 1000 );
+				redLight.position.set( - 550, 50, 0 );
+				scene.add( redLight );
+                style.declareObject('light', 'red').addMaterialChangeListener(function(material) {
+                    redLight.color = material.color;
+                });
+
+
+				var blueLight = new THREE.PointLight( 0x7f7fff, 0.25, 1000 );
+				blueLight.position.set( 0, 50, 550 );
+				scene.add( blueLight );
+                style.declareObject('light', 'blue').addMaterialChangeListener(function(material) {
+                    blueLight.color = material.color;
+                });
+
+
+                // Expose the style context to the style edit widget
+                angular.module('app', ['styleEdit']).controller("SetupCtrl", ['$scope', function($scope) {
+                    $scope.styleContext = style;
+                }]);
+			}
+
+			function render() {
+
+				// render (update) the mirrors
+				groundMirror.renderWithMirror( verticalMirror );
+				verticalMirror.renderWithMirror( groundMirror );
+				
+				renderer.render(scene, camera);
+
+			}
+
+			function update() {
+				
+				requestAnimationFrame( update );
+
+				var timer = Date.now() * 0.01;
+
+				sphereGroup.rotation.y -= 0.002;
+
+				smallSphere.position.set(
+					Math.cos( timer * 0.1 ) * 30,
+					Math.abs( Math.cos( timer * 0.2 ) ) * 20 + 5,
+					Math.sin( timer * 0.1 ) * 30
+				);
+				smallSphere.rotation.y = ( Math.PI / 2 ) - timer * 0.1;
+				smallSphere.rotation.z = timer * 0.8;
+
+				cameraControls.update();
+				
+				render();
+			}
+
+            function initStyle() {
+                var style = new ThreeSS.StyleContext();
+                style.declareRule('wall',   { material: 'meshPhong' });
+                style.declareRule('.top',   { color: 0xffffff });
+                style.declareRule('.back',  { color: 0xffffff });
+                style.declareRule('.front', { color: 0x7f7fff });
+                style.declareRule('.right', { color: 0x00ff00 });
+                style.declareRule('.left',  { color: 0xff0000 });
+
+                style.declareRule('smallSphere', { material: 'meshLambert', color: 0xffffff,
+                                                   emissive: 0x333333, shading: THREE.FlatShading });
+                style.declareRule('largeSphere', { material: 'meshPhong', color: 0xffffff, emissive: 0x444444 });
+
+                style.declareRule('light', { material: 'meshBasic' /* ignored */ });
+                style.declareRule('light.main',  { color: 0xcccccc });
+                style.declareRule('light.red',   { color: 0xff0000 });
+                style.declareRule('light.green', { color: 0x00ff00 });
+                style.declareRule('light.blue',  { color: 0x7f7fff });
+
+                return style;
+            }
+
+			init();
+
+            var style = initStyle();
+			fillScene(style);
+			update();
+
+
+
+        </script>
+	</body>
+</html>
