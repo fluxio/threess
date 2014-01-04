@@ -600,7 +600,9 @@
     };
 
     /**
-     * Create a {THREE.Material} for the given style
+     * Create a {THREE.Material} for the given style.  The returned material will be an instance
+     * of a {THREE.Material} and has a special key set (_style) which contains the contents
+     * of the passed style.
      *
      * @param {Object} style  Key-value pairs of attributes to apply to the result {THREE.Material}.
      *                        This style also contains a magical attribute (.material) which
@@ -622,6 +624,8 @@
 
         delete styleClone.material;
         material.setValues(styleClone);
+        material._style = styleClone;
+
         return material;
     };
 

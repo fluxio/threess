@@ -140,10 +140,20 @@
 				sphereGroup.add( halfSphere );
 				
 				var geometry = new THREE.IcosahedronGeometry( 5, 0 );
-				var material = new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0x333333, shading: THREE.FlatShading } );
+				var material = new THREE.MeshLambertMaterial( );
 				smallSphere = new THREE.Mesh( geometry, material );
 				scene.add(smallSphere);
                 style.declareObject('smallSphere').applyMaterialOnChange(smallSphere);
+
+                // Make a fake style so that we can change the size of our small sphere via styla
+                style.declareObject('smallSphere').addMaterialChangeListener(function(material) {
+                    var newGeom = new THREE.IcosahedronGeometry(material._style.size, 0);
+                    scene.remove(smallSphere);
+
+                    smallSphere = new THREE.Mesh(newGeom, material);
+                    scene.add(smallSphere);
+                });
+
 
 				// walls
 				var planeTop = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( ) );
@@ -260,9 +270,10 @@
                 style.declareRule('.right', { color: 0x00ff00 });
                 style.declareRule('.left',  { color: 0xff0000 });
 
-                style.declareRule('smallSphere', { material: 'meshLambert', color: 0xffffff,
+                style.declareRule('smallSphere', { material: 'meshLambert', color: 0xffffff, size: 5,
                                                    emissive: 0x333333, shading: THREE.FlatShading });
-                style.declareRule('largeSphere', { material: 'meshPhong', color: 0xffffff, emissive: 0x444444 });
+                style.declareRule('largeSphere', { material: 'meshPhong', color: 0xffffff,
+                                                   emissive: 0x444444, shading: THREE.SmoothShading });
 
                 style.declareRule('light', { material: 'meshBasic' /* ignored */ });
                 style.declareRule('light.main',  { color: 0xcccccc });

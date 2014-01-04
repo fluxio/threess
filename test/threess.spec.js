@@ -368,6 +368,11 @@ describe('3ss', function() {
             expect(mat1 instanceof THREE.LineBasicMaterial).toBe(true);
             expect(mat1.color.getHex()).toEqual(0xff00ff);
             expect(mat1.opacity).toEqual(0.7);
+
+            expect(mat1._style).toEqual({
+                color: 0xff00ff,
+                opacity: 0.7
+            });
         });
 
         it ("should create materials from a style 2", function() {
