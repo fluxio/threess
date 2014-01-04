@@ -200,7 +200,7 @@
                     mainLight.color = material.color;
                 });
 
-				var greenLight = new THREE.PointLight( 0x00ff00, 0.25, 1000 );
+				var greenLight = new THREE.PointLight( undefined, 0.25, 1000 );
 				greenLight.position.set( 550, 50, 0 );
 				scene.add( greenLight );
                 style.declareObject('light', 'green').addMaterialChangeListener(function(material) {
@@ -208,7 +208,7 @@
                 });
 
 
-				var redLight = new THREE.PointLight( 0xff0000, 0.25, 1000 );
+				var redLight = new THREE.PointLight( undefined, 0.25, 1000 );
 				redLight.position.set( - 550, 50, 0 );
 				scene.add( redLight );
                 style.declareObject('light', 'red').addMaterialChangeListener(function(material) {
@@ -216,7 +216,7 @@
                 });
 
 
-				var blueLight = new THREE.PointLight( 0x7f7fff, 0.25, 1000 );
+				var blueLight = new THREE.PointLight( undefined, 0.25, 1000 );
 				blueLight.position.set( 0, 50, 550 );
 				scene.add( blueLight );
                 style.declareObject('light', 'blue').addMaterialChangeListener(function(material) {
@@ -273,7 +273,8 @@
                 style.declareRule('smallSphere', { material: 'meshLambert', color: 0xffffff, size: 5,
                                                    emissive: 0x333333, shading: THREE.FlatShading });
                 style.declareRule('largeSphere', { material: 'meshPhong', color: 0xffffff,
-                                                   emissive: 0x444444, shading: THREE.SmoothShading });
+                                                   emissive: 0x444444, shading: THREE.SmoothShading,
+                                                   shininess: 30 });
 
                 style.declareRule('light', { material: 'meshBasic' /* ignored */ });
                 style.declareRule('light.main',  { color: 0xcccccc });
