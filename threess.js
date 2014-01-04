@@ -58,7 +58,7 @@
      * @param {String}    objectType  Type of the object ('line', 'mesh', etc.)  This
      *                                object type can be used in a way similar to an
      *                                HTML tag (aka element name).
-     * @param {String}    classStr    A space-separated string of classes to assign to this
+     * @param {String}    [classStr]  A space-separated string of classes to assign to this
      *                                object.  (e.g. "parcel skinny")   This argument is
      *                                equivalent to the HTML 'class=' attribute.
      * @param {Object}    [style]     An optional object with key-value pairs containing the
@@ -70,6 +70,7 @@
      * @see {StyleContext#declareRule}
      */
     StyleContext.prototype.declareObject = function(objectType, classStr, style) {
+        classStr = classStr || "";
         style = style || {};
         var me = this;
         var onDerived = function(derivedObject) {
