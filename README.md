@@ -94,6 +94,17 @@ var styleCtx = new ThreeSS.StyleContext();
 styleCtx.process();  // apply the styles
 ```
 
+#### Processing rule updates
+Depending on what type of operation you are doing (changing the rules, or changing the object's
+classes), you may need to re-apply rules.  This can be done by invoking the style context's
+process method:
+
+```javascript
+styleCtx.process();
+```
+
+
+
 #### styleContext.declareRule()
 ThreeSS rules are very similar to CSS rules.  Each rule contains two parts, a **selector** and a
 **style**.

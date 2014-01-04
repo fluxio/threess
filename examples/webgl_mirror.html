@@ -274,7 +274,7 @@
                                                    emissive: 0x333333, shading: THREE.FlatShading });
                 style.declareRule('largeSphere', { material: 'meshPhong', color: 0xffffff,
                                                    emissive: 0x444444, shading: THREE.SmoothShading,
-                                                   shininess: 30 });
+                                                   shininess: 30, specular: 0x00ff00 });
 
                 style.declareRule('light', { material: 'meshBasic' /* ignored */ });
                 style.declareRule('light.main',  { color: 0xcccccc });

@@ -41,7 +41,7 @@
          * @returns {boolean} true if the given attribute should have a color picker
          */
         $scope.attributeHasColorPicker = function(attrName) {
-            return ['color', 'ambient', 'emissive', 'fillStyle'].indexOf(attrName) !== -1;
+            return ['color', 'ambient', 'emissive', 'fillStyle', 'specular'].indexOf(attrName) !== -1;
         };
 
         /**
@@ -49,7 +49,7 @@
          * @returns {boolean} true if the given attribute has values which are hex colors
          */
         $scope.attributeIsHexColor = function(attrName) {
-            return ['color', 'ambient', 'emissive'].indexOf(attrName) !== -1;
+            return ['color', 'ambient', 'emissive', 'specular'].indexOf(attrName) !== -1;
         };
 
         /**
