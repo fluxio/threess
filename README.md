@@ -13,6 +13,11 @@ Build Status
 </table>
 
 
+Demo
+----
+[![ThreeSS Intro Video](examples/threess_intro.png)](http://www.youtube.com/watch?v=uyTBIO45S8M)
+
+
 Example Code
 ------------
 ```javascript
